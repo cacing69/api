@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/cacing69/api/entity"
-	. "github.com/cacing69/api/lib"
+	"github.com/cacing69/api/lib"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gofiber/fiber"
 )
@@ -26,20 +26,21 @@ func AuthToken(c *fiber.Ctx) {
 			signedToken, err := claimToken(user)
 
 			if err != nil {
-				panic(err.Error())
+				c.Next(err)
+				return
 			}
 
-			JSON(c, Res{
+			c.JSON(Res{
 				Message: "auth token success",
 				Data: M{
 					"token": signedToken,
 				},
 			})
 		} else {
-			BadRequest(c, "invalid username / password")
+			lib.BadRequest(c, "invalid username / password")
 		}
 	} else {
-		BadRequest(c, "invalid authorization")
+		lib.BadRequest(c, "invalid authorization")
 	}
 }
 

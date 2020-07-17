@@ -36,14 +36,3 @@ func BadRequest(c *fiber.Ctx, message string) error {
 		Code:    422,
 	}.JSON(c)
 }
-
-func Error(c *fiber.Ctx, err error, code int) error {
-	return Res{
-		Message: err.Error(),
-		Code:    code,
-	}.JSON(c)
-}
-
-func JSON(c *fiber.Ctx, res Res) error {
-	return res.JSON(c)
-}

@@ -5,7 +5,7 @@ import (
 
 	"github.com/cacing69/api/conf"
 	"github.com/cacing69/api/entity"
-	. "github.com/cacing69/api/lib"
+	"github.com/cacing69/api/lib"
 	"github.com/gofiber/fiber"
 	"github.com/rocketlaunchr/dbq/v2"
 )
@@ -37,11 +37,11 @@ func SysError(c *fiber.Ctx) {
 		return
 	}
 
-	Res{
+	c.JSON(Res{
 		Message: "Error Testing",
 		Code:    _code,
 		Errors:  msg,
-	}.JSON(c)
+	})
 }
 
 func SysValidate(c *fiber.Ctx) {
@@ -55,7 +55,7 @@ func SysValidate(c *fiber.Ctx) {
 	err, validate := Validate(c, r)
 
 	if err != nil {
-		ValidateFailed(c, err, validate)
+		lib.ValidateFailed(c, err, validate)
 		return
 	}
 
