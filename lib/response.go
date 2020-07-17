@@ -11,10 +11,14 @@ type Res struct {
 	Code    int         `json:"code" default:"200"`
 }
 
+func (r Res) JSON(c *fiber.Ctx) error {
+	return c.Status(404).JSON(r)
+}
+
 func ResNotFound(c *fiber.Ctx) error {
 	return c.Status(404).JSON(
 		Res{
-			Message: "data not found",
+			Message: "not found",
 			Code:    404,
 		},
 	)

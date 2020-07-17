@@ -11,6 +11,7 @@ import (
 )
 
 func SysIndex(c *fiber.Ctx) {
+	// panic("normally this would crash your app")
 	c.JSON(Res{
 		Message: "welcome to api-source",
 	})
@@ -81,4 +82,8 @@ func SysQuery(c *fiber.Ctx) {
 			Data: _row,
 		})
 	}
+}
+
+func SysTestMiddleware(c *fiber.Ctx) {
+
 }
