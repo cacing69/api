@@ -5,7 +5,7 @@ import (
 
 	"github.com/cacing69/api/conf"
 	"github.com/cacing69/api/entity"
-	"github.com/cacing69/api/lib"
+	. "github.com/cacing69/api/lib"
 	"github.com/gofiber/fiber"
 	"github.com/rocketlaunchr/dbq/v2"
 )
@@ -55,7 +55,7 @@ func SysValidate(c *fiber.Ctx) {
 	err, validate := Validate(c, r)
 
 	if err != nil {
-		lib.ValidateFailed(c, err, validate)
+		ValidateFailed(c, err, validate)
 		return
 	}
 

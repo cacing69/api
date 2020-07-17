@@ -7,7 +7,6 @@ import (
 
 func IsPublicEndpoint(path string) bool {
 	listPublic := []string{
-		"/",
 		"/auth/token",
 		"/sys/ping",
 	}

@@ -22,11 +22,11 @@ func NotFound(c *fiber.Ctx) error {
 	}.JSON(c)
 }
 
-func ValidateFailed(c *fiber.Ctx, err error, validate []string) error {
+func ValidateFailed(c *fiber.Ctx, err error, trace []string) error {
 	return Res{
 		Message: err.Error(),
 		Code:    422,
-		Errors:  validate,
+		Errors:  trace,
 	}.JSON(c)
 }
 
@@ -34,5 +34,13 @@ func BadRequest(c *fiber.Ctx, message string) error {
 	return Res{
 		Message: message,
 		Code:    422,
+	}.JSON(c)
+}
+
+func UnAuthorized(c *fiber.Ctx, trace []string) error {
+	return Res{
+		Message: "unathorized",
+		Code:    401,
+		Errors:  trace,
 	}.JSON(c)
 }

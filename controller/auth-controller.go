@@ -4,15 +4,10 @@ import (
 	"time"
 
 	"github.com/cacing69/api/entity"
-	"github.com/cacing69/api/lib"
+	. "github.com/cacing69/api/lib"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gofiber/fiber"
 )
-
-var LOGIN_EXPIRATION_DURATION = time.Duration(5) * time.Minute
-var JWT_SIGNING_METHOD = jwt.SigningMethodHS256
-var JWT_SIGNATURE_KEY = []byte("secret")
-var APPLICATION_NAME = "api-source"
 
 func AuthToken(c *fiber.Ctx) {
 	authorization := c.Fasthttp.Request.Header.Peek("Authorization")
@@ -37,10 +32,10 @@ func AuthToken(c *fiber.Ctx) {
 				},
 			})
 		} else {
-			lib.BadRequest(c, "invalid username / password")
+			BadRequest(c, "invalid username / password")
 		}
 	} else {
-		lib.BadRequest(c, "invalid authorization")
+		BadRequest(c, "invalid authorization")
 	}
 }
 

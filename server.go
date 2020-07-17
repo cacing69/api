@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"strings"
 
 	"github.com/cacing69/api/conf"
 	"github.com/cacing69/api/controller"
@@ -19,25 +19,18 @@ func main() {
 			CaseSensitive: true,
 			StrictRouting: true,
 			ErrorHandler: func(c *fiber.Ctx, err error) {
-				code := fiber.StatusInternalServerError
+				code := 400
 
-				Res{
-					Message: err.Error(),
+				c.JSON(Res{
+					Message: strings.ToLower(err.Error()),
 					Code:    code,
-				}.JSON(c)
+				})
 			},
 		},
 	)
 
 	// Match all routes starting with /api
-	r.Use(func(c *fiber.Ctx) {
-		if IsPublicEndpoint(c.Path()) {
-			c.Next()
-			fmt.Println("🥇 public endpoint")
-		} else {
-			fmt.Println("🥇 private endpoint secure with jwt")
-		}
-	})
+	r.Use(JwtMiddleware)
 
 	r.Use(middleware.Recover())
 
