@@ -12,30 +12,38 @@ type Res struct {
 }
 
 func (r Res) JSON(c *fiber.Ctx) error {
-	return c.Status(404).JSON(r)
+	return c.Status(r.Code).JSON(r)
 }
 
-func ResNotFound(c *fiber.Ctx) error {
-	return c.Status(404).JSON(
-		Res{
-			Message: "not found",
-			Code:    404,
-		},
-	)
+func NotFound(c *fiber.Ctx) error {
+	return Res{
+		Message: "not found",
+		Code:    404,
+	}.JSON(c)
 }
 
-func ResValidate(c *fiber.Ctx, err error, validate []string) error {
-	return c.Status(422).JSON(
-		Res{
-			Message: err.Error(),
-			Code:    422,
-			Errors:  validate,
-		},
-	)
+func ValidateFailed(c *fiber.Ctx, err error, validate []string) error {
+	return Res{
+		Message: err.Error(),
+		Code:    422,
+		Errors:  validate,
+	}.JSON(c)
 }
 
-func ResErr(c *fiber.Ctx, res Res) error {
-	return c.Status(res.Code).JSON(
-		res,
-	)
+func BadRequest(c *fiber.Ctx, message string) error {
+	return Res{
+		Message: message,
+		Code:    422,
+	}.JSON(c)
+}
+
+func Error(c *fiber.Ctx, err error, code int) error {
+	return Res{
+		Message: err.Error(),
+		Code:    code,
+	}.JSON(c)
+}
+
+func JSON(c *fiber.Ctx, res Res) error {
+	return res.JSON(c)
 }

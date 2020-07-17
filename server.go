@@ -20,11 +20,11 @@ func main() {
 			StrictRouting: true,
 			ErrorHandler: func(c *fiber.Ctx, err error) {
 				code := fiber.StatusInternalServerError
-				c.Status(code).JSON(
-					Res{
-						Message: err.Error(),
-					},
-				)
+
+				Res{
+					Message: err.Error(),
+					Code:    code,
+				}.JSON(c)
 			},
 		},
 	)
@@ -64,7 +64,7 @@ func main() {
 	user.Delete("", controller.UserDelete)
 
 	r.Use(func(c *fiber.Ctx) {
-		ResNotFound(c)
+		NotFound(c)
 	})
 
 	r.Listen(3000)

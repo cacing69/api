@@ -9,9 +9,10 @@ import (
 	"github.com/gofiber/fiber"
 )
 
-var LOGIN_EXPIRATION_DURATION = time.Duration(1) * time.Hour
+var LOGIN_EXPIRATION_DURATION = time.Duration(5) * time.Minute
 var JWT_SIGNING_METHOD = jwt.SigningMethodHS256
 var JWT_SIGNATURE_KEY = []byte("secret")
+var APPLICATION_NAME = "api-source"
 
 func AuthToken(c *fiber.Ctx) {
 	authorization := c.Fasthttp.Request.Header.Peek("Authorization")
@@ -19,31 +20,47 @@ func AuthToken(c *fiber.Ctx) {
 	username, password, state := ParseBasicAuth(string(authorization))
 
 	if state {
-		auth, _ := authenticate(username, password)
+		auth, user := authenticate(username, password)
 		if auth {
-			Res{
+
+			signedToken, err := claimToken(user)
+
+			if err != nil {
+				panic(err.Error())
+			}
+
+			JSON(c, Res{
 				Message: "auth token success",
-				Data: fiber.Map{
-					"username": username,
-					"password": password,
+				Data: M{
+					"token": signedToken,
 				},
-			}.JSON(c)
+			})
 		} else {
-			Res{
-				Message: "invalid username / password",
-			}.JSON(c)
+			BadRequest(c, "invalid username / password")
 		}
 	} else {
-		Res{
-			Message: "invalid authorization",
-			Code:    400,
-		}.JSON(c)
+		BadRequest(c, "invalid authorization")
 	}
 }
 
-func authenticate(username, password string) (bool, entity.User) {
+func claimToken(user entity.User) (string, error) {
+	claims := JwtClaims{
+		StandardClaims: jwt.StandardClaims{
+			Issuer:    APPLICATION_NAME,
+			ExpiresAt: time.Now().Add(LOGIN_EXPIRATION_DURATION).Unix(),
+		},
+		Id: user.Id,
+	}
 
-	// fake auth
+	token := jwt.NewWithClaims(
+		JWT_SIGNING_METHOD,
+		claims,
+	)
+
+	return token.SignedString(JWT_SIGNATURE_KEY)
+}
+
+func authenticate(username, password string) (bool, entity.User) {
 	if username == "cacing69" && password == "23Cacing09#@" {
 		return true, entity.User{
 			Id:   1,

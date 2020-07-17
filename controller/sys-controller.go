@@ -37,11 +37,11 @@ func SysError(c *fiber.Ctx) {
 		return
 	}
 
-	ResErr(c, Res{
+	Res{
 		Message: "Error Testing",
 		Code:    _code,
 		Errors:  msg,
-	})
+	}.JSON(c)
 }
 
 func SysValidate(c *fiber.Ctx) {
@@ -55,7 +55,7 @@ func SysValidate(c *fiber.Ctx) {
 	err, validate := Validate(c, r)
 
 	if err != nil {
-		ResValidate(c, err, validate)
+		ValidateFailed(c, err, validate)
 		return
 	}
 
@@ -75,7 +75,7 @@ func SysQuery(c *fiber.Ctx) {
 	_row := dbq.MustQ(c.Context(), conf.DB, "SELECT * FROM m_user where user_id = ?", entity.UserSingleOption(), _id)
 
 	if _row == nil {
-		ResNotFound(c)
+		NotFound(c)
 		return
 	} else {
 		c.JSON(Res{
