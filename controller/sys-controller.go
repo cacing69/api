@@ -3,23 +3,24 @@ package controller
 import (
 	"strconv"
 
-	"github.com/cacing69/api/conf"
-	"github.com/cacing69/api/entity"
 	. "github.com/cacing69/api/lib"
 	"github.com/gofiber/fiber"
-	"github.com/rocketlaunchr/dbq/v2"
 )
 
 func SysIndex(c *fiber.Ctx) {
 	// panic("normally this would crash your app")
 	c.JSON(Res{
 		Message: "welcome to api-source",
+		Status:  true,
+		Code:    200,
 	})
 }
 
 func SysPing(c *fiber.Ctx) {
 	c.JSON(Res{
 		Message: "pong!",
+		Status:  true,
+		Code:    200,
 	})
 }
 
@@ -60,30 +61,32 @@ func SysValidate(c *fiber.Ctx) {
 	}
 
 	c.JSON(Res{
-		Data: r,
+		Data:    r,
+		Message: "success",
+		Status:  true,
+		Code:    200,
 	})
 }
 
-func SysQuery(c *fiber.Ctx) {
-	_id, _err := strconv.Atoi(c.Query("id"))
+// func SysQuery(c *fiber.Ctx) {
+// 	_id, _err := strconv.Atoi(c.Query("id"))
 
-	if _err != nil {
-		c.Next(_err)
-		return
-	}
+// 	if _err != nil {
+// 		c.Next(_err)
+// 		return
+// 	}
 
-	_row := dbq.MustQ(c.Context(), conf.DB, "SELECT * FROM m_user where user_id = ?", entity.UserSingleOption(), _id)
+// 	_row := dbq.MustQ(c.Context(), conf.DB, "SELECT * FROM m_user where user_id = ?", entity.UserSingleOption(), _id)
 
-	if _row == nil {
-		NotFound(c)
-		return
-	} else {
-		c.JSON(Res{
-			Data: _row,
-		})
-	}
-}
-
-func SysTestMiddleware(c *fiber.Ctx) {
-
-}
+// 	if _row == nil {
+// 		NotFound(c)
+// 		return
+// 	} else {
+// 		c.JSON(Res{
+// 			Data:    _row,
+// 			Message: "success",
+// 			Status:  true,
+// 			Code:    200,
+// 		})
+// 	}
+// }

@@ -8,5 +8,5 @@ type M map[string]interface{}
 
 type JwtClaims struct {
 	jwt.StandardClaims
-	Id int
+	Id int `json:"id"`
 }

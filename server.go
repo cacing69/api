@@ -33,6 +33,7 @@ func main() {
 	r.Use(JwtMiddleware)
 
 	r.Use(middleware.Recover())
+	r.Use(middleware.Logger())
 
 	// default router
 	r.Get("/", controller.SysIndex)
@@ -40,21 +41,23 @@ func main() {
 	// auth endpoint
 	auth := r.Group("/auth")
 	auth.Post("/token", controller.AuthToken)
+	auth.Get("/check", controller.AuthCheck)
 
 	// system standard for testing route
 	sys := r.Group("/sys")
 	sys.Get("/ping", controller.SysPing)
 	sys.Get("/error/:code", controller.SysError)
 	sys.Post("/validate", controller.SysValidate)
-	sys.Get("/query", controller.SysQuery)
+	// sys.Get("/query", controller.SysQuery)
 
 	// user endpoint
 	user := r.Group("/user")
+	// user.Get("/orm", controller.UserIndexOrm)
 	user.Get("", controller.UserIndex)
-	user.Get("/:id", controller.UserShow)
+	// user.Get("/:id", controller.UserShow)
 	user.Post("", controller.UserStore)
-	user.Patch("/:id", controller.UserUpdate)
-	user.Delete("", controller.UserDelete)
+	// user.Patch("/:id", controller.UserUpdate)
+	// user.Delete("", controller.UserDelete)
 
 	r.Use(func(c *fiber.Ctx) {
 		NotFound(c)

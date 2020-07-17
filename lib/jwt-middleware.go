@@ -9,7 +9,6 @@ import (
 	"github.com/gofiber/fiber"
 )
 
-
 var LOGIN_EXPIRATION_DURATION = time.Duration(24) * time.Hour
 var JWT_SIGNING_METHOD = jwt.SigningMethodHS256
 var JWT_SIGNATURE_KEY = []byte("secret")

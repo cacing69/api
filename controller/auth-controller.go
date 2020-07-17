@@ -30,6 +30,8 @@ func AuthToken(c *fiber.Ctx) {
 				Data: M{
 					"token": signedToken,
 				},
+				Status: true,
+				Code:   200,
 			})
 		} else {
 			BadRequest(c, "invalid username / password")
@@ -37,6 +39,17 @@ func AuthToken(c *fiber.Ctx) {
 	} else {
 		BadRequest(c, "invalid authorization")
 	}
+}
+
+func AuthCheck(c *fiber.Ctx) {
+	auth := c.Fasthttp.UserValue("auth").(jwt.MapClaims)
+
+	c.JSON(Res{
+		Message: "auth check success",
+		Data:    auth,
+		Status:  true,
+		Code:    200,
+	})
 }
 
 func claimToken(user entity.User) (string, error) {
